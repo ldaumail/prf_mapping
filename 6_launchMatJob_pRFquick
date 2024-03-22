@@ -1,0 +1,14 @@
+#!/bin/bash -l
+#$ -N S###.pRF_quick
+#$ -j y
+#$ -m ae
+#$ -l h_rt=12:00:00 
+#$ -l mem_total=64G
+#$ -pe omp 3
+
+export SUBJ=102816
+
+#module load matlab
+
+/Applications/MATLAB_R2018a.app/bin/matlab -nodisplay -r "addpath('/Users/tong_processor/Desktop/Loic/retinotopy/Ling_retinotopy/prf_FreeSurfer7/HCP_102816/code/utils'); pRF_prep_quick; exit"
+

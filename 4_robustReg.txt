@@ -1,0 +1,53 @@
+#!/bin/bash -l
+
+#PARAMS
+export PROJ=prfMapping
+export SUBJID=sub-F019_230718
+export SUBJSESS=sess01
+export WORK_DIR=/Users/tonglab/Documents/Loic/${PROJ}/analysis/${SUBJID}/data
+export SESS_DIR=${SUBJSESS}
+export FWHM=0 # 0 5 10
+# check if need to add omp flag to fsfast
+
+#### SETUP
+# export FSLOUTPUTTYPE=NIFTI_GZ
+
+
+cd $WORK_DIR
+export SUBJECTS_DIR=/Users/tonglab/Documents/Loic/all_mri_data/freesurfer
+
+#####################
+#### regruns to first run
+#####################
+export TARGBLOCK='001'
+export MIDFRAME_TARG='75'  # middle time-point TR
+
+# make run1 frame to be used as target for registration
+cd ${WORK_DIR}/${SESS_DIR}/bold
+cd $TARGBLOCK
+mri_convert fmc.up.nii.gz -f $MIDFRAME_TARG fmc.up.frame${MIDFRAME_TARG}.nii.gz
+cd ${WORK_DIR}/${SESS_DIR}/bold
+
+################################
+# pRF scans
+################################
+export MIDFRAME='75'
+BLOCKS=("002" "003" "004" "005" "006" "007" "008")
+
+# register all other runs to target run using middle time-point
+for B in "${BLOCKS[@]}"
+do
+cd $B
+mri_convert fmc.up.nii.gz -f $MIDFRAME fmc.up.frame${MIDFRAME}.nii.gz
+		
+mri_robust_register --mov fmc.up.frame${MIDFRAME}.nii.gz --dst ${WORK_DIR}/${SESS_DIR}/bold/${TARGBLOCK}/fmc.up.frame${MIDFRAME_TARG}.nii.gz --lta run${B}torun${TARGBLOCK}.lta --satit --iscale
+
+mri_convert fmc.up.frame${MIDFRAME}.nii.gz -at run${B}torun${TARGBLOCK}.lta -rt cubic fmc.up.frame${MIDFRAME}.regto${TARGBLOCK}.nii.gz
+mri_convert fmc.up.nii.gz -at run${B}torun${TARGBLOCK}.lta -rt cubic fmc.up.regto${TARGBLOCK}.nii.gz
+mv fmc.up.nii.gz fmc.up.orig.nii.gz
+cp fmc.up.regto${TARGBLOCK}.nii.gz fmc.up.nii.gz
+		
+cd ${WORK_DIR}/${SESS_DIR}/bold
+done
+
+

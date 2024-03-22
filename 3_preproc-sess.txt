@@ -1,0 +1,46 @@
+#!/bin/bash -l
+# preproc session data
+# note: once this is done, check motion correction and bbr before running robust register
+
+#PARAMS
+export SUBJ=sub-F019_230718
+export PROJ=prfMapping
+export SUBJSESS=sess01
+export WORK_DIR=/Users/tonglab/Documents/Loic/${PROJ}/analysis/${SUBJ}/data
+export SESS_DIR=${WORK_DIR}/${SUBJSESS}
+export FWHM=0 # 0 5 10
+
+#### SETUP
+
+cd $WORK_DIR
+export SUBJECTS_DIR=/Users/tonglab/Documents/Loic/all_mri_data/freesurfer
+
+
+### Add sessid and subjectname files at right locations
+cd $SESS_DIR
+> subjectname
+echo "$SUBJ" > subjectname
+
+cd ..
+> sessid
+echo "$SUBJSESS" > sessid
+
+#####################
+##### preproc (volume) - MC, STC, brainmasks, bbr
+#####################                        
+cd $WORK_DIR
+preproc-sess -s $SUBJSESS -fsd bold -sliceorder up -per-session -fwhm ${FWHM} -force
+
+#assess quality of BBR: 0 is good, 1 is bad. Cause for concerns is >0.8
+tkregister-sess -s sess01 -fsd bold -per-session -bbr-sum
+
+cd ./${SUBJSESS}/bold/002
+R --vanilla -q
+dat=as.matrix(read.table("fmc.mcdat"))
+pdf("./motionSummary.pdf",16,8)
+par(mfrow=c(1,2),pty='s')
+matplot(dat[,2:4],t='l',col=c("red","darkgreen","blue"),lty=1,ylab="Motion Correction (mm)",main="Rotation")
+matplot(dat[,5:7],t='l',col=c("red","darkgreen","blue"),lty=1,ylab="Motion Correction (mm)",main="Translation")
+dev.off()
+q()
+open ${WORK_DIR}/${SUBJSESS}/bold/002/motionSummary.pdf

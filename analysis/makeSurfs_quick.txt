@@ -1,0 +1,44 @@
+#!/bin/bash
+export SUBJ=sub-F019_230718
+export PROJ=prfMapping
+export SUBJECTS_DIR=/Users/tonglab/Documents/Loic/all_mri_data/freesurfer
+export ANALDIR=/Users/tonglab/Documents/Loic/${PROJ}/analysis/${SUBJ}/analysis/topUp/multibar_only
+export DATADIR=/Users/tonglab/Documents/Loic/${PROJ}/analysis/${SUBJ}/data
+mkdir ${ANALDIR}/pRF_surfoverlays
+
+
+cd ${ANALDIR}
+
+mri_vol2surf --mov pRF_Vols/pRFquick_ang.nii.gz --reg ${DATADIR}/sess01/bold/register.dof6.lta --hemi lh --o pRF_surfoverlays/lh.pRFquick_ang.nii.gz --projfrac 0.5
+
+mri_vol2surf --mov pRF_Vols/pRFquick_ang.nii.gz --reg ${DATADIR}/sess01/bold/register.dof6.lta --hemi rh --o pRF_surfoverlays/rh.pRFquick_ang.nii.gz --projfrac 0.5
+
+
+mri_vol2surf --mov pRF_Vols/pRFquick_ecc.nii.gz --reg ${DATADIR}/sess01/bold/register.dof6.lta --hemi lh --o pRF_surfoverlays/lh.pRFquick_ecc.nii.gz --projfrac 0.5
+
+mri_vol2surf --mov pRF_Vols/pRFquick_ecc.nii.gz --reg ${DATADIR}/sess01/bold/register.dof6.lta --hemi rh --o pRF_surfoverlays/rh.pRFquick_ecc.nii.gz --projfrac 0.5
+
+
+mri_vol2surf --mov pRF_Vols/pRFquick_expt.nii.gz --reg ${DATADIR}/sess01/bold/register.dof6.lta --hemi lh --o pRF_surfoverlays/lh.pRFquick_expt.nii.gz --projfrac 0.5
+
+mri_vol2surf --mov pRF_Vols/pRFquick_expt.nii.gz --reg ${DATADIR}/sess01/bold/register.dof6.lta --hemi rh --o pRF_surfoverlays/rh.pRFquick_expt.nii.gz --projfrac 0.5
+
+
+mri_vol2surf --mov pRF_Vols/pRFquick_rfsize.nii.gz --reg ${DATADIR}/sess01/bold/register.dof6.lta --hemi lh --o pRF_surfoverlays/lh.pRFquick_rfsize.nii.gz --projfrac 0.5
+
+mri_vol2surf --mov pRF_Vols/pRFquick_rfsize.nii.gz --reg ${DATADIR}/sess01/bold/register.dof6.lta --hemi rh --o pRF_surfoverlays/rh.pRFquick_rfsize.nii.gz --projfrac 0.5
+
+
+mri_vol2surf --mov pRF_Vols/pRFquick_R2.nii.gz --reg ${DATADIR}/sess01/bold/register.dof6.lta --hemi lh --o pRF_surfoverlays/lh.pRFquick_R2.nii.gz --projfrac 0.5
+
+mri_vol2surf --mov pRF_Vols/pRFquick_R2.nii.gz --reg ${DATADIR}/sess01/bold/register.dof6.lta --hemi rh --o pRF_surfoverlays/rh.pRFquick_R2.nii.gz --projfrac 0.5
+
+
+mri_vol2surf --mov pRF_Vols/pRFquick_gain.nii.gz --reg ${DATADIR}/sess01/bold/register.dof6.lta --hemi lh --o pRF_surfoverlays/lh.pRFquick_gain.nii.gz --projfrac 0.5
+
+mri_vol2surf --mov pRF_Vols/pRFquick_gain.nii.gz --reg ${DATADIR}/sess01/bold/register.dof6.lta --hemi rh --o pRF_surfoverlays/rh.pRFquick_gain.nii.gz --projfrac 0.5
+
+
+mri_vol2surf --mov pRF_Vols/pRFquick_meanvol.nii.gz --reg ${DATADIR}/sess01/bold/register.dof6.lta --hemi lh --o pRF_surfoverlays/lh.pRFquick_meanvol.nii.gz --projfrac 0.5
+
+mri_vol2surf --mov pRF_Vols/pRFquick_meanvol.nii.gz --reg ${DATADIR}/sess01/bold/register.dof6.lta --hemi rh --o pRF_surfoverlays/rh.pRFquick_meanvol.nii.gz --projfrac 0.5

@@ -1,0 +1,36 @@
+#!/bin/bash
+##################
+### PARAMETERS ###
+##################
+
+# SUBJECT ID
+export PROJ=prfMapping
+export SUBJ=sub-F019
+export SESS=sess01
+
+# DIRECTORIES
+export PROJDIR=/Users/tonglab/Documents/Loic/${PROJ}
+mkdir ${PROJDIR}/analysis/${SUBJ}_230718/data/${SESS}
+cd ${PROJDIR}/analysis/${SUBJ}_230718/data/${SESS}
+DataDir=${PROJDIR}/analysis/${SUBJ}_230718/data
+
+# Runs and parameters of interest
+multibarRuns=(1 2 3 4)
+#1 Get Nifti bold data from pRF mapping design
+#2 Organize data into fsfast structure
+#rename nifti files
+for i in "${multibarRuns[@]}"
+do 
+mkdir -p `printf "bold/%03d" $i`
+cp `printf "$DataDir/functional/multibar/run%02d/inputs/rawData_topUp.nii.gz" $i`  `printf "$DataDir/$SESS/bold/%03d/f.nii.gz" $i` 
+done
+
+wedgeringRuns=(1 2 3 4)
+
+for i in "${wedgeringRuns[@]}"
+do 
+r=$(expr $i + 4)
+mkdir -p `printf "bold/%03d" $r`
+cp `printf "$DataDir/functional/wedgering/run%02d/inputs/rawData_topUp.nii.gz" $i`  `printf "$DataDir/$SESS/bold/%03d/f.nii.gz" $r` 
+done
+

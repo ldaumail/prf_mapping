@@ -1,0 +1,22 @@
+export SUBJ=###
+export SUBJECTS_DIR=/project/vision/subjects_FreeSurfer6
+
+mkdir surfs4retino
+
+mri_vol2surf --mov pRF_Vols/pRF_angReal.nii.gz --reg Sess1/bold/register.dof6.lta --hemi lh --o surfs4retino/lh.pRF_angReal.nii.gz --projfrac 0.5
+
+mri_vol2surf --mov pRF_Vols/pRF_angReal.nii.gz --reg Sess1/bold/register.dof6.lta --hemi rh --o surfs4retino/rh.pRF_angReal.nii.gz --projfrac 0.5
+
+mri_vol2surf --mov pRF_Vols/pRF_angImag.nii.gz --reg Sess1/bold/register.dof6.lta --hemi lh --o surfs4retino/lh.pRF_angImag.nii.gz --projfrac 0.5
+
+mri_vol2surf --mov pRF_Vols/pRF_angImag.nii.gz --reg Sess1/bold/register.dof6.lta --hemi rh --o surfs4retino/rh.pRF_angImag.nii.gz --projfrac 0.5
+
+
+
+mri_vol2surf --mov pRF_Vols/pRF_eccReal.nii.gz --reg Sess1/bold/register.dof6.lta --hemi lh --o surfs4retino/lh.pRF_eccReal.nii.gz --projfrac 0.5
+
+mri_vol2surf --mov pRF_Vols/pRF_eccReal.nii.gz --reg Sess1/bold/register.dof6.lta --hemi rh --o surfs4retino/rh.pRF_eccReal.nii.gz --projfrac 0.5
+
+mri_vol2surf --mov pRF_Vols/pRF_eccImag.nii.gz --reg Sess1/bold/register.dof6.lta --hemi lh --o surfs4retino/lh.pRF_eccImag.nii.gz --projfrac 0.5
+
+mri_vol2surf --mov pRF_Vols/pRF_eccImag.nii.gz --reg Sess1/bold/register.dof6.lta --hemi rh --o surfs4retino/rh.pRF_eccImag.nii.gz --projfrac 0.5

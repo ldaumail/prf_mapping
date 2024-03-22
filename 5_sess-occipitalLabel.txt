@@ -1,0 +1,51 @@
+#!/bin/bash -l
+#$ -N SXXX_sess.occipitalLabel
+#$ -j y
+#$ -m ae
+#$ -l h_rt=12:00:00 
+#$ -l mem_total=12
+#$ -pe omp 4
+
+#PARAMS
+export PROJ=prfMapping
+export SUBJID=sub-F019_230718
+export SUBJSESS=sess01
+export WORK_DIR=/Users/tonglab/Documents/Loic/${PROJ}/analysis/${SUBJID}/data
+export SESS_DIR=${SUBJSESS}
+export FWHM=0 # 0 5 10
+
+# check if need to add omp flag to fsfast
+
+#### SETUP
+export FSLOUTPUTTYPE=NIFTI_GZ
+
+
+cd $WORK_DIR
+export SUBJECTS_DIR=/Users/tonglab/Documents/Loic/all_mri_data/freesurfer
+
+# make Yeo Network surface labels for subject from fsaverage atlas
+
+mri_surf2surf --srcsubject fsaverage --trgsubject $SUBJID --hemi rh --sval-annot $SUBJECTS_DIR/fsaverage/label/rh.Yeo2011_7Networks_N1000 --tval $SUBJECTS_DIR/${SUBJID}/label/rh.Yeo2011_7Networks_N1000.annot
+
+mri_surf2surf --srcsubject fsaverage --trgsubject $SUBJID --hemi lh --sval-annot $SUBJECTS_DIR/fsaverage/label/lh.Yeo2011_7Networks_N1000 --tval $SUBJECTS_DIR/${SUBJID}/label/lh.Yeo2011_7Networks_N1000.annot
+
+mkdir -m 770 $SUBJECTS_DIR/${SUBJID}/label/YeoNetworks
+
+mri_annotation2label --subject $SUBJID --hemi rh --annotation Yeo2011_7Networks_N1000 --outdir ${SUBJECTS_DIR}/${SUBJID}/label/YeoNetworks
+
+mri_annotation2label --subject $SUBJID --hemi lh --annotation Yeo2011_7Networks_N1000 --outdir ${SUBJECTS_DIR}/${SUBJID}/label/YeoNetworks
+
+# bring subject Network#1 surface label into functional volume (native) space
+
+cd ${WORK_DIR}/${SESS_DIR}/bold
+
+mri_label2vol --label $SUBJECTS_DIR/${SUBJID}/label/YeoNetworks/rh.7Networks_1.label --o rh.Yeo7-net1.VOL.nii.gz --fillthresh 0 --temp template.nii.gz --reg register.dof6.lta --subject $SUBJID --hemi rh --proj abs 0 1 .1
+
+mri_label2vol --label $SUBJECTS_DIR/${SUBJID}/label/YeoNetworks/lh.7Networks_1.label --o lh.Yeo7-net1.VOL.nii.gz --fillthresh 0 --temp template.nii.gz --reg register.dof6.lta --subject $SUBJID --hemi lh --proj abs 0 1 .1
+
+fslmaths.fsl rh.Yeo7-net1.VOL.nii.gz -add lh.Yeo7-net1.VOL.nii.gz Yeo7-net1.VOL.nii.gz
+
+fslmaths.fsl Yeo7-net1.VOL.nii.gz -div Yeo7-net1.VOL.nii.gz Yeo7-net1.VOL.nii.gz
+
+# output volumetric label stats, i.e. total # of voxels in label
+mri_segstats --seg Yeo7-net1.VOL.nii.gz --sum Yeo7-Net1.stats

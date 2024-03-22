@@ -1,0 +1,10 @@
+#!/bin/bash
+export SUBJECTS_DIR=/home/tonglab/Documents/Loic/retinotopy/freesurfer
+export ANALDIR=/home/tonglab/Documents/Loic/retinotopy/loic_retino/daveTopup_ling/sub-F019/analysis
+
+freeview –f lh.inflated:overlay=/home/tonglab/Documents/Loic/retinotopy/loic_retino/daveTopup_ling/sub-F019/analysis/pRF_surfoverlays/lh.pRFquick_ang.nii.gz 
+   	–f SUBJECTS_DIR/sub-F019/surf/rh.inflated:overlay=ANALDIR/pRF_surfoverlays/rh.pRFquick_ang.nii.gz  
+
+
+freeview –f ${SUBJECTS_DIR}/sub-F019/surf/lh.inflated \
+	 –f ${SUBJECTS_DIR}/sub-F019/surf/rh.inflated
